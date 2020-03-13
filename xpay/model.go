@@ -106,6 +106,7 @@ type Transaction struct {
 	*/
 
 	Hash        string
+	Owner       string
 	From        string
 	To          string
 	Amount      string
@@ -121,6 +122,7 @@ type Transaction struct {
 func NewTransaction(result *gjson.Result) *Transaction {
 	obj := Transaction{}
 	obj.Hash = result.Get("transaction.key").String()
+	obj.Owner = result.Get("transaction.owner").String()
 	obj.From = result.Get("transaction.sender_account").String()
 	obj.To = result.Get("transaction.recipient_account").String()
 	obj.Amount = result.Get("transaction.amount").String()

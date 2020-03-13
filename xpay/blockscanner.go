@@ -62,7 +62,7 @@ func NewBlockScanner(wm *WalletManager) *BlockScanner {
 
 	bs.extractingCH = make(chan struct{}, maxExtractingSize)
 	bs.wm = wm
-	bs.RescanLastBlockCount = 0
+	bs.RescanLastBlockCount = 3
 
 	// set task
 	bs.SetTask(bs.ScanBlockTask)
@@ -112,7 +112,7 @@ func (bs *BlockScanner) ScanBlockTask() {
 		maxBlockHeight := lastBlock.Height
 
 		bs.wm.Log.Info("current block height:", currentHeight, " maxBlockHeight:", maxBlockHeight)
-		if uint64(currentHeight) == maxBlockHeight-1 {
+		if uint64(currentHeight) >= maxBlockHeight {
 			bs.wm.Log.Std.Info("block scanner has scanned full chain data. Current height %d", maxBlockHeight)
 			break
 		}
@@ -180,6 +180,11 @@ func (bs *BlockScanner) ScanBlockTask() {
 			//通知新区块给观测者，异步处理
 			bs.newBlockNotify(block)
 		}
+	}
+
+	//重扫前N个块，为保证记录找到
+	for i := currentHeight - bs.RescanLastBlockCount; i <= currentHeight; i++ {
+		bs.scanBlock(i)
 	}
 
 	//重扫失败区块
@@ -346,20 +351,18 @@ func (bs *BlockScanner) ExtractTransaction(txid string, scanTargetFunc openwalle
 	from := transaction.From
 	to := transaction.To
 
-	//订阅地址为交易单中的发送者
-	accountID1, ok1 := scanTargetFunc(openwallet.ScanTarget{Address: from, Symbol: bs.wm.Symbol(), BalanceModelType: openwallet.BalanceModelTypeAddress})
-	//订阅地址为交易单中的接收者
-	accountID2, ok2 := scanTargetFunc(openwallet.ScanTarget{Address: to, Symbol: bs.wm.Symbol(), BalanceModelType: openwallet.BalanceModelTypeAddress})
-	if accountID1 == accountID2 && len(accountID1) > 0 && len(accountID2) > 0 {
-		bs.InitExtractResult(accountID1, transaction, &result, 0)
-	} else {
-		if ok1 {
-			bs.InitExtractResult(accountID1, transaction, &result, 1)
-		}
+	optType := int64(0)
+	if from == transaction.Owner {
+		optType = 1
+	} else if to == transaction.Owner {
+		optType = 2
+	}
 
-		if ok2 {
-			bs.InitExtractResult(accountID2, transaction, &result, 2)
-		}
+	//订阅地址为交易单中的发送者
+	accountID1, ok1 := scanTargetFunc(openwallet.ScanTarget{Address: transaction.Owner, Symbol: bs.wm.Symbol(), BalanceModelType: openwallet.BalanceModelTypeAddress})
+	//订阅地址为交易单中的接收者
+	if ok1 {
+		bs.InitExtractResult(accountID1, transaction, &result, optType)
 	}
 
 	return result

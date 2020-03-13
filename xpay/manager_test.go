@@ -49,7 +49,7 @@ func testNewWalletManager() *WalletManager {
 }
 
 func TestWalletManager_GetWalletDetails(t *testing.T) {
-	result, err := tw.GetWalletDetails("027a4522cfa1c35b51aa1a0f881ab1ccb19deae6277917b7d641490d4492083711")
+	result, err := tw.GetWalletDetails("03a94747ce9fb236b90298cd7bdb7fe71b9183032e9706d548ef64059ca1714c29")
 	if err != nil {
 		t.Errorf("GetWalletDetails failed, err: %v", err)
 	}
@@ -90,7 +90,7 @@ func TestWalletManager_GetBlock(t *testing.T) {
 }
 
 func TestWalletManager_GetTransaction(t *testing.T) {
-	result, err := tw.GetTransaction("f022671089c7bbb169705822096709818946369ce1a11d8858852e0c67cb9bb2")
+	result, err := tw.GetTransaction("c8cceba27d8ad7cc2a52cff30229ec5618d4ea3bc7b1b5432598ce5f168ffb68")
 	if err != nil {
 		t.Errorf("GetTransaction failed, err: %v", err)
 	}
@@ -142,8 +142,8 @@ func TestWalletManager_SignRawTxOffline(t *testing.T) {
 }
 
 func TestWalletManager_SendRaw(t *testing.T) {
-	sender := "027a4522cfa1c35b51aa1a0f881ab1ccb19deae6277917b7d641490d4492083711"
-	privateKey, _ := hex.DecodeString("672c6012ef49a30d8b9b7501706ef3769aaefc38d72d0f048dfade7a850100b4")
+	sender := "036be8d5d120331c73c6e67990c1ce49e2240a892087bd77a75eb3692a110eeac8"
+	privateKey, _ := hex.DecodeString("b7446244ddf3cb0bac88ea35751cca1a179358fa8e6202ecfa20187626da398a")
 	w, err := tw.GetWalletDetails(sender)
 	if err != nil {
 		t.Errorf("GetWalletDetails failed, err: %v", err)
@@ -152,9 +152,9 @@ func TestWalletManager_SendRaw(t *testing.T) {
 	nonce := w.Nonce + 1
 	rawTx := &RawTransaction{
 		Sender:    sender,
-		Recipient: "0336b1d33588a4e71ae83386174b52201c8f6a1cdd3c77af852794a9e5f55530c7",
+		Recipient: "03a94747ce9fb236b90298cd7bdb7fe71b9183032e9706d548ef64059ca1714c29",
 		Symbol:    "XIF",
-		Amount:    "3.7",
+		Amount:    "4.75",
 		Nonce:     nonce,
 	}
 	//03a0f4450a7ebc06354caa601601290e90ad950b775df3bee621a763a358dfe2a7
