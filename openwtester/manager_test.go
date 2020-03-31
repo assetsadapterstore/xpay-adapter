@@ -2,9 +2,9 @@ package openwtester
 
 import (
 	"fmt"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openw"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openw"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"path/filepath"
 	"testing"
 )
@@ -12,8 +12,8 @@ import (
 var (
 	testApp        = "assets-adapter"
 	configFilePath = filepath.Join("conf")
-	dbFilePath = filepath.Join("data", "db")
-	dbFileName = "blockchain-XIF.db"
+	dbFilePath     = filepath.Join("data", "db")
+	dbFileName     = "blockchain-XIF.db"
 )
 
 func testInitWalletManager() *openw.WalletManager {
@@ -116,7 +116,7 @@ func TestWalletManager_CreateAddress(t *testing.T) {
 	walletID := "W89u9bj31VPFqWNATruUTF2sFiUxCbCsUt"
 	//accountID := "HYCP3KKSvYv1KoWeCkHC37Dr6GgWieCsE9zkMpGgr11R"
 	accountID := "2JFLF6qGBqSr95JF1TAk9dhGt5QvZG73s6XKJnTZ4c6K"
-	address, err := tm.CreateAddress(testApp, walletID, accountID, 10)
+	address, err := tm.CreateAddress(testApp, walletID, accountID, 1000)
 	if err != nil {
 		log.Error(err)
 		return

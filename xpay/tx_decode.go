@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 	"time"
 )

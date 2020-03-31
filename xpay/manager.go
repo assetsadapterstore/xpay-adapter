@@ -18,11 +18,10 @@ package xpay
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/assetsadapterstore/xpay-adapter/xpay_addrdec"
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/common"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/common"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/imroc/req"
 	"github.com/tidwall/gjson"
 )
@@ -30,21 +29,19 @@ import (
 type WalletManager struct {
 	openwallet.AssetsAdapterBase
 
-	client          *Client                         // 节点客户端
-	Config          *WalletConfig                   // 节点配置
-	Decoder         openwallet.AddressDecoder       //地址编码器
-	DecoderV2       openwallet.AddressDecoderV2     //地址编码器V2
-	TxDecoder       openwallet.TransactionDecoder   //交易单编码器
-	Log             *log.OWLogger                   //日志工具
-	Blockscanner    openwallet.BlockScanner         //区块扫描器
+	client       *Client                       // 节点客户端
+	Config       *WalletConfig                 // 节点配置
+	Decoder    openwallet.AddressDecoderV2   //地址编码器V2
+	TxDecoder    openwallet.TransactionDecoder //交易单编码器
+	Log          *log.OWLogger                 //日志工具
+	Blockscanner openwallet.BlockScanner       //区块扫描器
 }
 
 func NewWalletManager() *WalletManager {
 	wm := WalletManager{}
 	wm.Config = NewConfig(Symbol)
 	wm.Blockscanner = NewBlockScanner(&wm)
-	wm.Decoder = NewAddressDecoder()
-	wm.DecoderV2 = xpay_addrdec.NewAddressDecoderV2()
+	wm.Decoder = NewAddressDecoderV2(&wm)
 	wm.TxDecoder = NewTransactionDecoder(&wm)
 	wm.Log = log.NewOWLogger(wm.Symbol())
 	return &wm
@@ -169,7 +166,6 @@ func (wm *WalletManager) SignRawTxOffline(rawTx *RawTransaction, privateKey []by
 	return nil
 }
 
-
 // GetAddressNonce
 func (wm *WalletManager) GetAddressNonce(wrapper openwallet.WalletDAI, account *XIFAccount) uint64 {
 	var (
@@ -211,3 +207,18 @@ func (wm *WalletManager) UpdateAddressNonce(wrapper openwallet.WalletDAI, addres
 	}
 }
 
+// InformWallet
+func (wm *WalletManager) InformWallet(address, symbol string) error {
+	path := fmt.Sprintf("coin/inform")
+
+	pararm := req.Param{
+		"publickey": address,
+		"symbol":    symbol,
+	}
+
+	_, err := wm.client.call("POST", path, pararm)
+	if err != nil {
+		return err
+	}
+	return nil
+}

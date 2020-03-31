@@ -19,7 +19,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/tidwall/gjson"
 	"time"
 )

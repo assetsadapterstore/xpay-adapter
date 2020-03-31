@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/blocktree/openwallet/log"
+	"github.com/blocktree/openwallet/v2/log"
 	"github.com/imroc/req"
 	"github.com/tidwall/gjson"
 )
@@ -63,7 +63,6 @@ func (c *Client) call(method, path string, param interface{}) (*gjson.Result, er
 	}
 	return &resp, nil
 }
-
 
 //isError 是否报错
 func isError(result *gjson.Result) error {

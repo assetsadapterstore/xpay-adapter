@@ -19,8 +19,8 @@ import (
 	"encoding/hex"
 	"github.com/astaxie/beego/config"
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/hdkeystore"
-	"github.com/blocktree/openwallet/log"
+	"github.com/blocktree/openwallet/v2/hdkeystore"
+	"github.com/blocktree/openwallet/v2/log"
 	"path/filepath"
 	"testing"
 )
@@ -49,7 +49,7 @@ func testNewWalletManager() *WalletManager {
 }
 
 func TestWalletManager_GetWalletDetails(t *testing.T) {
-	result, err := tw.GetWalletDetails("03a94747ce9fb236b90298cd7bdb7fe71b9183032e9706d548ef64059ca1714c29")
+	result, err := tw.GetWalletDetails("02b7b468f6e653c798b151a7f7dee454b10b540b6e518616ed4ca40f2ac8262223")
 	if err != nil {
 		t.Errorf("GetWalletDetails failed, err: %v", err)
 	}
@@ -170,4 +170,17 @@ func TestWalletManager_SendRaw(t *testing.T) {
 	}
 
 	log.Infof("result: %+v", result)
+}
+
+func TestWalletManager_InformWallet(t *testing.T) {
+	prv, _ := hdkeystore.GenerateSeed(32)
+	pub, _ := owcrypt.GenPubkey(prv, owcrypt.ECC_CURVE_NIST_P256)
+	log.Infof("prv: %s", hex.EncodeToString(prv))
+	comPub := owcrypt.PointCompress(pub, owcrypt.ECC_CURVE_NIST_P256)
+	log.Infof("pub: %s", hex.EncodeToString(comPub))
+	err := tw.InformWallet(hex.EncodeToString(comPub), "XIF")
+	if err != nil {
+		t.Errorf("InformWallet failed, err: %v", err)
+		return
+	}
 }

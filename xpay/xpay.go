@@ -16,8 +16,8 @@ package xpay
 
 import (
 	"github.com/astaxie/beego/config"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 )
 
@@ -42,13 +42,8 @@ func (wm *WalletManager) Decimal() int32 {
 }
 
 //AddressDecode 地址解析器
-func (wm *WalletManager) GetAddressDecode() openwallet.AddressDecoder {
-	return wm.Decoder
-}
-
-//AddressDecode 地址解析器
 func (wm *WalletManager) GetAddressDecoderV2() openwallet.AddressDecoderV2 {
-	return wm.DecoderV2
+	return wm.Decoder
 }
 
 //TransactionDecoder 交易单解析器
